@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sdaher <sdaher@student.42beirut.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/06 10:15:44 by sdaher            #+#    #+#             */
-/*   Updated: 2025/12/12 17:10:05 by sdaher           ###   ########.fr       */
+/*   Created: 2025/12/09 16:49:22 by sdaher            #+#    #+#             */
+/*   Updated: 2025/12/12 16:54:28 by sdaher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
-#include<stdio.h>
+#include"get_next_line_bonus.h"
 
 static char	*extract_first_line(char *data);
 static char	*get_static( char *data);
@@ -22,20 +21,20 @@ char	*get_next_line(int fd)
 	char		*buffer;
 	char		*line;
 	char		*data;
-	static char	*var;
+	static char	*var[1024];
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
-	data = fill_line(fd, buffer, var);
+	data = fill_line(fd, buffer, var[fd]);
 	free(buffer);
 	buffer = NULL;
 	if (!data)
 		return (NULL);
 	line = extract_first_line(data);
-	var = get_static(data);
+	var[fd] = get_static(data);
 	free (data);
 	return (line);
 }
@@ -112,15 +111,3 @@ static char	*fill_line(int fd, char *buffer, char *var)
 	}
 	return (var);
 }
-
-// int main (void)
-// {
-// 	char	*line;
-// 	int	fd;
-
-// 	fd = open("test.txt", O_RDONLY);
-// 	line = get_next_line(fd);
-// 	printf("%s\n",line);
-// 	line = get_next_line(fd);
-// 	printf("%s",line);
-// }
